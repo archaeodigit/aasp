@@ -1,1 +1,335 @@
-# Replace with the versioned AASP 0.4.2 vocabulary TTL.
+# Archaeological Assertion and Synthesis Profile (AASP) 0.4.2
+
+
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmgeo: <http://www.cidoc-crm.org/extensions/crmgeo/> .
+@prefix crminf: <http://www.cidoc-crm.org/extensions/crminf/> .
+@prefix crmsci: <http://www.cidoc-crm.org/extensions/crmsci/> .
+@prefix crmsurv: <https://takin.solutions/ontologies/CRMsurv/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prof: <http://www.w3.org/ns/dx/prof/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+aasp: a owl:Ontology ;
+    dcterms:creator "Alper Asinmaz" ;
+    dcterms:title "Archaeological Assertion and Synthesis Profile (AASP)"@en ;
+    dcterms:description "A compact, scale-neutral application profile for coordinating archaeological evidence, source-qualified claims, reusable analytical plans, execution-specific selection decisions, concrete analysis executions, synthesis assertions, claim relations, and publication revision so that field-survey knowledge can be inspected and revised without destructive overwriting."@en ;
+    dcterms:issued "2026-07-02"^^xsd:date ;
+    dcterms:modified "2026-07-04"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:replaces <https://w3id.org/aasp/0.4.1/> ;
+    owl:priorVersion <https://w3id.org/aasp/0.4.1/> ;
+    owl:versionIRI <https://w3id.org/aasp/0.4.2/> ;
+    owl:versionInfo "0.4.2 revised distribution – versioned EKAS, PKAP, and controlled-scenario epistemic-revisability reference profile"@en ;
+    rdfs:comment "AASP 0.4.2 is an additive revision of 0.4.1. It adds procedural reconfiguration as a claim-relation basis and aligns the reference distribution with the V68 article argument. The profile does not claim to replace CIDOC CRM, CRMsci, CRMinf, CRMsurv, PROV-O, DCAT, SKOS, or GeoSPARQL. Its contribution is operational specification: identifying a compact subset of cross-standard relations that should remain explicit when archaeological survey syntheses are audited, rerun, compared, and revised without overwriting earlier knowledge states. Epistemic revisability remains an infrastructural capacity expressed through six operational requirements rather than an ontology class. The namespace is provisional and persistent; AASP is published as a versioned research application profile rather than as a community standard."@en ;
+    dcterms:requires crm:, crmgeo:, crminf:, crmsci:, crmsurv:, dcat:, geo:, prov:, skos: ;
+    prof:isProfileOf crm:, crmgeo:, crminf:, crmsci:, crmsurv:, dcat:, geo:, prov:, skos: .
+
+#################################################################
+# Core classes
+#################################################################
+
+aasp:ArchaeologicalProject a owl:Class ;
+    rdfs:label "Archaeological Project"@en ;
+    rdfs:comment "An institutional or research project that may comprise several field seasons, analytical activities, and releases."@en .
+
+aasp:DocumentationActivity a owl:Class ;
+    rdfs:label "Documentation Activity"@en ;
+    rdfs:comment "An identifiable activity through which archaeological evidence, records, interpretations, or publications are produced or revised."@en ;
+    rdfs:subClassOf prov:Activity .
+
+aasp:ObservationActivity a owl:Class ;
+    rdfs:label "Observation Activity"@en ;
+    rdfs:subClassOf aasp:DocumentationActivity .
+
+aasp:CollectionActivity a owl:Class ;
+    rdfs:label "Collection Activity"@en ;
+    rdfs:subClassOf aasp:DocumentationActivity .
+
+aasp:ProcessingActivity a owl:Class ;
+    rdfs:label "Processing Activity"@en ;
+    rdfs:subClassOf aasp:DocumentationActivity .
+
+aasp:PublicationActivity a owl:Class ;
+    rdfs:label "Publication Activity"@en ;
+    rdfs:subClassOf aasp:DocumentationActivity .
+
+aasp:DataPublicationActivity a owl:Class ;
+    rdfs:label "Data Publication Activity"@en ;
+    rdfs:subClassOf aasp:PublicationActivity .
+
+aasp:ReassessmentActivity a owl:Class ;
+    rdfs:label "Reassessment Activity"@en ;
+    rdfs:subClassOf aasp:DocumentationActivity .
+
+aasp:EvidenceSet a owl:Class ;
+    rdfs:label "Evidence Set"@en ;
+    rdfs:comment "A citable grouping of observations, counts, collected materials, images, measurements, or processed records used as evidence. An evidence state is represented as an addressable configuration of such entities and their generating activities rather than as a separate universal class."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aasp:ObservationSet a owl:Class ; rdfs:label "Observation Set"@en ; rdfs:subClassOf aasp:EvidenceSet .
+aasp:RecordSet a owl:Class ; rdfs:label "Record Set"@en ; rdfs:subClassOf aasp:EvidenceSet .
+aasp:EvidenceSummary a owl:Class ; rdfs:label "Evidence Summary"@en ; rdfs:subClassOf aasp:EvidenceSet .
+
+aasp:Claim a owl:Class ;
+    rdfs:label "Claim"@en ;
+    rdfs:comment "A source-qualified archaeological proposition about a resource. Claims may coexist, disagree, or be related without being overwritten."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aasp:PublishedClaim a owl:Class ; rdfs:label "Published Claim"@en ; rdfs:subClassOf aasp:Claim .
+aasp:ChronologyClaim a owl:Class ; rdfs:label "Chronology Claim"@en ; rdfs:subClassOf aasp:Claim .
+aasp:FunctionalClaim a owl:Class ; rdfs:label "Functional Claim"@en ; rdfs:subClassOf aasp:Claim .
+aasp:SpatialAssertion a owl:Class ; rdfs:label "Spatial Assertion"@en ; rdfs:subClassOf aasp:Claim .
+aasp:ScholarlyInterpretation a owl:Class ; rdfs:label "Scholarly Interpretation"@en ; rdfs:subClassOf aasp:Claim .
+
+aasp:SynthesisAssertion a owl:Class ;
+    rdfs:label "Synthesis Assertion"@en ;
+    rdfs:comment "A claim generated by a concrete AnalysisExecution that applies a declared AnalyticalView. It may concern an individual resource, locality, relationship, diachronic sequence, comparative grouping, corpus-level pattern, or regional interpretation."@en ;
+    rdfs:subClassOf aasp:Claim .
+
+aasp:AnalyticalView a owl:Class ;
+    rdfs:label "Analytical View"@en ;
+    rdfs:comment "A reusable and citable analytical plan declaring purpose, criteria, thresholds, mappings, geometries, scopes, or other analytical choices. It is not itself the activity that generates a result."@en ;
+    rdfs:subClassOf prov:Plan .
+
+aasp:AnalysisExecution a owl:Class ;
+    rdfs:label "Analysis Execution"@en ;
+    rdfs:comment "A concrete PROV activity that applies an AnalyticalView through a qualified association, uses declared inputs, records execution-specific selection decisions, and generates one or more synthesis assertions."@en ;
+    rdfs:subClassOf prov:Activity .
+
+aasp:SelectionCriterion a owl:Class ;
+    rdfs:label "Selection Criterion"@en ;
+    rdfs:comment "A reusable rule, threshold, mapping condition, spatial choice, or declared scope that may be applied by one or more executions."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aasp:SelectionDecision a owl:Class ;
+    rdfs:label "Selection Decision"@en ;
+    rdfs:comment "An execution-specific decision to include or exclude a claim, evidence set, geometry, mapping, or other analytical resource, together with its status, criterion, and reason."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aasp:ClaimRelation a owl:Class ;
+    rdfs:label "Claim Relation"@en ;
+    rdfs:comment "An addressable relation between two claims. relationType records what the relating claim does to the related claim; relationBasis records the evidential, interpretive, spatial, terminological, procedural, analytical, or citation basis through which that relation was produced."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aasp:DatasetRelease a owl:Class ;
+    rdfs:label "Dataset Release"@en ;
+    rdfs:comment "A published dataset release kept distinct from the scholarly claims that it republishes or revises."@en ;
+    rdfs:subClassOf prov:Entity, dcat:Dataset .
+
+# Project- and demonstration-oriented support classes retained for compatibility.
+aasp:SurveyContext a owl:Class ; rdfs:label "Survey Context"@en .
+aasp:RegionalSurveyContext a owl:Class ; rdfs:label "Regional Survey Context"@en .
+aasp:DiscoveryUnit a owl:Class ; rdfs:label "Discovery Unit"@en .
+aasp:LocalizedCulturalAnomaly a owl:Class ; rdfs:label "Localized Cultural Anomaly"@en .
+aasp:GridCollectionUnit a owl:Class ; rdfs:label "Grid Collection Unit"@en .
+aasp:Locality a owl:Class ; rdfs:label "Locality"@en .
+aasp:PublishedFeature a owl:Class ; rdfs:label "Published Feature"@en .
+aasp:DocumentedAssociation a owl:Class ; rdfs:label "Documented Association"@en .
+aasp:ControlledScenario a owl:Class ; rdfs:label "Controlled Scenario"@en .
+aasp:EvaluationResult a owl:Class ; rdfs:label "Evaluation Result"@en .
+aasp:RobustnessAssessment a owl:Class ; rdfs:label "Robustness Assessment"@en .
+aasp:PluralityAssessment a owl:Class ; rdfs:label "Plurality Assessment"@en .
+aasp:ModifiedAggregateActivity a owl:Class ; rdfs:label "Modified Aggregate Activity"@en ; rdfs:subClassOf aasp:DocumentationActivity .
+aasp:ModifiedAnalyticalView a owl:Class ; rdfs:label "Modified Analytical View"@en ; rdfs:subClassOf aasp:AnalyticalView .
+aasp:ModifiedDemonstrationElement a owl:Class ; rdfs:label "Modified Demonstration Element"@en .
+aasp:ModifiedDemonstrationGraph a owl:Class ; rdfs:label "Modified Demonstration Graph"@en .
+
+#################################################################
+# Controlled vocabularies
+#################################################################
+
+aasp:ClaimRelationTypeScheme a skos:ConceptScheme ; skos:prefLabel "AASP claim-relation types"@en .
+aasp:ClaimRelationBasisScheme a skos:ConceptScheme ; skos:prefLabel "AASP claim-relation bases"@en .
+aasp:RevisionTypeScheme a skos:ConceptScheme ; skos:prefLabel "AASP revision types"@en .
+aasp:SelectionStatusScheme a skos:ConceptScheme ; skos:prefLabel "AASP selection statuses"@en .
+aasp:RevisabilityRequirementScheme a skos:ConceptScheme ; skos:prefLabel "AASP operational requirements for epistemic revisability"@en .
+
+aasp:Confirmation a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "confirmation"@en ; skos:definition "The relating claim supports the related claim."@en .
+aasp:Qualification a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "qualification"@en ; skos:definition "The relating claim narrows, refines, or conditions the related claim without wholly rejecting it."@en .
+aasp:Questioning a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "questioning"@en ; skos:definition "The relating claim identifies grounds for doubt or unresolved uncertainty concerning the related claim."@en .
+aasp:Supersession a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "supersession"@en ; skos:definition "The relating claim replaces the related claim for a stated purpose while preserving the earlier claim and its history."@en .
+aasp:AlternativeCharacterisation a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "alternative characterisation"@en ; skos:definition "The relating claim provides a different source-qualified or analytical characterisation without necessarily rejecting the related claim."@en .
+aasp:Restatement a skos:Concept ; skos:inScheme aasp:ClaimRelationTypeScheme ; skos:prefLabel "restatement"@en ; skos:definition "The relating claim repeats or adopts the content of the related claim."@en .
+
+aasp:IndependentObservation a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "independent observation"@en ; skos:definition "The relation is supported by observations produced independently of the related claim."@en .
+aasp:IndependentReassessment a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "independent reassessment"@en ; skos:definition "The relation was produced through an independent analytical or evidential reassessment."@en .
+aasp:CitationInheritance a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "citation inheritance"@en ; skos:definition "The relating claim adopts the related claim through citation without introducing independent archaeological evidence."@en .
+aasp:TerminologicalRemapping a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "terminological remapping"@en ; skos:definition "The relation was produced by mapping or translating between source terminologies or vocabularies."@en .
+aasp:SpatialReassessment a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "spatial reassessment"@en ; skos:definition "The relation was produced by reassessing a spatial representation, geometry, or spatial precision."@en .
+aasp:SourceSpecificInterpretation a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "source-specific interpretation"@en ; skos:definition "The relation arises because separate sources or publication contexts provide distinct interpretations of the same resource."@en .
+aasp:EvidentialExpansion a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "evidential expansion"@en ; skos:definition "The relating claim is supported by a broader, more granular, or newly added evidentiary basis than the related claim."@en .
+aasp:AnalyticalReconfiguration a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "analytical reconfiguration"@en ; skos:definition "The relation arises because a different declared criterion, threshold, mapping, geometry choice, selection rule, or analytical plan was applied to the same or overlapping source graph."@en .
+aasp:ProceduralReconfiguration a skos:Concept ; skos:inScheme aasp:ClaimRelationBasisScheme ; skos:prefLabel "procedural reconfiguration"@en ; skos:definition "The relation arises because different field-observation, sampling, collection, recording, or processing procedures produced different evidence states from the same or overlapping survey context."@en ; skos:scopeNote "Use this basis for differences introduced during evidence production. For differences caused only by later analytical criteria, thresholds, mappings, geometry choices, selection rules, or analytical plans, use aasp:AnalyticalReconfiguration."@en .
+
+aasp:TechnicalRepublication a skos:Concept ; skos:inScheme aasp:RevisionTypeScheme ; skos:prefLabel "technical republication"@en ; skos:definition "A release republishes a scholarly claim unchanged while changing serialization, metadata, geometry, packaging, or other technical aspects."@en .
+aasp:ScholarlyRevision a skos:Concept ; skos:inScheme aasp:RevisionTypeScheme ; skos:prefLabel "scholarly revision"@en ; skos:definition "A release publishes a substantively revised scholarly claim or interpretation."@en .
+
+aasp:included a skos:Concept ; skos:inScheme aasp:SelectionStatusScheme ; skos:prefLabel "included"@en ; skos:definition "The selection target is included by a concrete analysis execution under the stated criterion and reason."@en .
+aasp:excluded a skos:Concept ; skos:inScheme aasp:SelectionStatusScheme ; skos:prefLabel "excluded"@en ; skos:definition "The selection target is excluded by a concrete analysis execution under the stated criterion and reason."@en .
+
+aasp:R1EvidenceStatePreservation a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R1 Evidence-state preservation"@en ; skos:definition "Earlier and later evidentiary states remain separately identifiable and citable."@en .
+aasp:R2ClaimLineage a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R2 Claim lineage"@en ; skos:definition "Successive, inherited, competing, and revised claims remain related without destructive overwriting."@en .
+aasp:R3ExplicitSelection a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R3 Explicit selection"@en ; skos:definition "Concrete inclusion and exclusion decisions retain their target, status, criterion, and reason."@en .
+aasp:R4PlanExecutionSeparation a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R4 Plan–execution separation"@en ; skos:definition "A reusable analytical plan is distinguished from each concrete execution and its execution-specific decisions."@en .
+aasp:R5SynthesisComparison a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R5 Synthesis comparison"@en ; skos:definition "Alternative or later synthesis assertions can be compared and the cause of their difference can be inspected."@en .
+aasp:R6PublicationAndRevision a skos:Concept ; skos:inScheme aasp:RevisabilityRequirementScheme ; skos:prefLabel "R6 Publication and revision"@en ; skos:definition "Technical republication is distinguished from substantive scholarly revision."@en .
+
+#################################################################
+# Core properties
+#################################################################
+
+aasp:aboutResource a owl:ObjectProperty ; rdfs:label "about resource"@en ; rdfs:domain aasp:Claim .
+aasp:supportedBy a owl:ObjectProperty ; rdfs:label "supported by"@en ; rdfs:domain aasp:Claim ; rdfs:range aasp:EvidenceSet .
+aasp:investigatedResource a owl:ObjectProperty ; rdfs:label "investigated resource"@en ; rdfs:domain aasp:DocumentationActivity .
+aasp:generatedObservation a owl:ObjectProperty ; rdfs:label "generated observation"@en .
+aasp:records a rdf:Property ; rdfs:label "records"@en .
+aasp:hasRepresentativeMember a owl:ObjectProperty ; rdfs:label "has representative member"@en .
+aasp:associatesResource a owl:ObjectProperty ; rdfs:label "associates resource"@en .
+aasp:assertsCharacterisation a owl:ObjectProperty ; rdfs:label "asserts characterisation"@en .
+aasp:assertsFunction a owl:ObjectProperty ; rdfs:label "asserts function"@en .
+aasp:assertsGeometry a owl:ObjectProperty ; rdfs:label "asserts geometry"@en .
+aasp:assertsPeriod a owl:ObjectProperty ; rdfs:label "asserts period"@en .
+aasp:usesGeometry a owl:ObjectProperty ; rdfs:label "uses geometry"@en .
+aasp:usedMethod a owl:ObjectProperty ; rdfs:label "used method"@en .
+aasp:hadObservationCondition a owl:ObjectProperty ; rdfs:label "had observation condition"@en .
+
+aasp:declaresCriterion a owl:ObjectProperty ;
+    rdfs:label "declares criterion"@en ;
+    rdfs:comment "Links a reusable AnalyticalView to a criterion, rule, threshold, mapping condition, spatial choice, or declared scope."@en ;
+    rdfs:domain aasp:AnalyticalView ; rdfs:range aasp:SelectionCriterion .
+
+aasp:recordsSelectionDecision a owl:ObjectProperty ;
+    rdfs:label "records selection decision"@en ;
+    rdfs:comment "Links a concrete AnalysisExecution to an addressable inclusion or exclusion decision generated while applying the declared AnalyticalView."@en ;
+    rdfs:domain aasp:AnalysisExecution ; rdfs:range aasp:SelectionDecision .
+
+aasp:selectionTarget a owl:ObjectProperty ;
+    rdfs:label "selection target"@en ;
+    rdfs:comment "Identifies the claim, evidence set, geometry, mapping, or other resource governed by a selection decision."@en ;
+    rdfs:domain aasp:SelectionDecision .
+
+aasp:selectionStatus a owl:ObjectProperty ;
+    rdfs:label "selection status"@en ;
+    rdfs:comment "Identifies whether a selection target is included or excluded by a concrete execution."@en ;
+    rdfs:domain aasp:SelectionDecision ; rdfs:range skos:Concept .
+
+aasp:basedOnCriterion a owl:ObjectProperty ;
+    rdfs:label "based on criterion"@en ;
+    rdfs:comment "Links a selection decision to the criterion, rule, threshold, mapping condition, or declared scope applied by the execution."@en ;
+    rdfs:domain aasp:SelectionDecision ; rdfs:range aasp:SelectionCriterion .
+
+aasp:selectionReason a owl:DatatypeProperty ;
+    rdfs:label "selection reason"@en ;
+    rdfs:comment "Records the scholarly explanation for the execution-specific inclusion or exclusion decision."@en ;
+    rdfs:domain aasp:SelectionDecision ; rdfs:range rdfs:Literal .
+
+aasp:hasPurpose a owl:DatatypeProperty ; rdfs:label "has purpose"@en ; rdfs:range rdfs:Literal .
+aasp:thresholdValue a owl:DatatypeProperty ; rdfs:label "threshold value"@en .
+aasp:appliesCriterion a owl:ObjectProperty ; rdfs:label "applies criterion"@en .
+aasp:appliesMapping a owl:ObjectProperty ; rdfs:label "applies mapping"@en .
+aasp:appliesSelectionRule a owl:ObjectProperty ; rdfs:label "applies selection rule"@en .
+
+aasp:fromClaim a owl:ObjectProperty ; rdfs:label "from claim"@en ; rdfs:domain aasp:ClaimRelation ; rdfs:range aasp:Claim .
+aasp:toClaim a owl:ObjectProperty ; rdfs:label "to claim"@en ; rdfs:domain aasp:ClaimRelation ; rdfs:range aasp:Claim .
+aasp:relationType a owl:ObjectProperty ; rdfs:label "relation type"@en ; rdfs:domain aasp:ClaimRelation ; rdfs:range skos:Concept .
+aasp:relationBasis a owl:ObjectProperty ; rdfs:label "relation basis"@en ; rdfs:domain aasp:ClaimRelation ; rdfs:range skos:Concept .
+aasp:relationReason a owl:DatatypeProperty ; rdfs:label "relation reason"@en ; rdfs:domain aasp:ClaimRelation ; rdfs:range rdfs:Literal .
+aasp:testsRequirement a owl:ObjectProperty ; rdfs:label "tests requirement"@en ; rdfs:range skos:Concept .
+
+aasp:publishesClaim a owl:ObjectProperty ;
+    rdfs:label "publishes claim"@en ;
+    rdfs:comment "Links a dataset release to a claim or synthesis assertion that the release publishes as an active scholarly output."@en ;
+    rdfs:domain aasp:DatasetRelease ;
+    rdfs:range aasp:Claim .
+
+aasp:republishesUnchangedClaim a owl:ObjectProperty ;
+    rdfs:label "republishes unchanged claim"@en ;
+    rdfs:comment "Links a dataset release to a claim that is republished without scholarly change, for example when packaging, serialization, or geometry is corrected while the interpretation remains unchanged."@en ;
+    rdfs:domain aasp:DatasetRelease ;
+    rdfs:range aasp:Claim .
+
+aasp:serializesDataset a owl:ObjectProperty ;
+    rdfs:label "serializes dataset"@en ;
+    rdfs:comment "Links a dataset release to the dataset, graph, distribution, or other data representation that is serialized in that release."@en ;
+    rdfs:domain aasp:DatasetRelease ;
+    rdfs:range dcat:Dataset .
+
+aasp:revisionType a owl:ObjectProperty ;
+    rdfs:label "revision type"@en ;
+    rdfs:comment "Identifies whether a dataset release is a technical republication or a scholarly revision."@en ;
+    rdfs:domain aasp:DatasetRelease ;
+    rdfs:range skos:Concept .
+
+# Source and demonstration status.
+aasp:isSourceDerived a owl:DatatypeProperty ; rdfs:label "is source derived"@en ; rdfs:range xsd:boolean .
+aasp:isArticleCreated a owl:DatatypeProperty ; rdfs:label "is article created"@en ; rdfs:range xsd:boolean .
+aasp:isSyntheticScenario a owl:DatatypeProperty ; rdfs:label "is synthetic scenario"@en ; rdfs:range xsd:boolean .
+aasp:isModifiedDemonstration a owl:DatatypeProperty ; rdfs:label "is modified demonstration"@en ; rdfs:range xsd:boolean .
+aasp:modificationNote a owl:DatatypeProperty ; rdfs:label "modification note"@en .
+aasp:assessmentResult a owl:DatatypeProperty ; rdfs:label "assessment result"@en .
+aasp:geometryRole a owl:DatatypeProperty ; rdfs:label "geometry role"@en .
+aasp:hasPublishedScore a owl:DatatypeProperty ; rdfs:label "has published score"@en .
+aasp:lineageType a owl:ObjectProperty ; rdfs:label "lineage type"@en .
+
+# Descriptive counts retained for example compatibility. These do not imply that
+# differently sampled evidence sets are directly normalized or population estimates.
+aasp:recordCount a owl:DatatypeProperty ; rdfs:label "record count"@en .
+aasp:objectRecordCount a owl:DatatypeProperty ; rdfs:label "object record count"@en .
+aasp:surveyUnitCount a owl:DatatypeProperty ; rdfs:label "survey unit count"@en .
+aasp:gridSquareCount a owl:DatatypeProperty ; rdfs:label "grid square count"@en .
+aasp:grabRecordCount a owl:DatatypeProperty ; rdfs:label "grab record count"@en .
+aasp:chronotypeCircleRecordCount a owl:DatatypeProperty ; rdfs:label "chronotype-circle record count"@en .
+aasp:collectedQuantity a owl:DatatypeProperty ; rdfs:label "collected quantity"@en .
+aasp:sherdCount a owl:DatatypeProperty ; rdfs:label "sherd count"@en .
+aasp:tileCount a owl:DatatypeProperty ; rdfs:label "tile count"@en .
+aasp:lithicCount a owl:DatatypeProperty ; rdfs:label "lithic count"@en .
+aasp:otherCount a owl:DatatypeProperty ; rdfs:label "other count"@en .
+aasp:totalSurfaceCount a owl:DatatypeProperty ; rdfs:label "total surface count"@en .
+
+# Optional query shortcuts retained but not preferred.
+aasp:includesClaim a owl:ObjectProperty ; rdfs:label "includes claim"@en ; rdfs:comment "Optional shortcut; prefer a SelectionDecision when criterion and reason matter."@en .
+aasp:includesResource a owl:ObjectProperty ; rdfs:label "includes resource"@en ; rdfs:comment "Optional shortcut; prefer a SelectionDecision when criterion and reason matter."@en .
+aasp:excludesClaim a owl:ObjectProperty ; rdfs:label "excludes claim"@en ; rdfs:comment "Optional shortcut; prefer a SelectionDecision when criterion and reason matter."@en .
+aasp:excludesResource a owl:ObjectProperty ; rdfs:label "excludes resource"@en ; rdfs:comment "Optional shortcut; prefer a SelectionDecision when criterion and reason matter."@en .
+aasp:citesClaim a owl:ObjectProperty ; rdfs:label "cites claim"@en .
+aasp:reassessesClaim a owl:ObjectProperty ; rdfs:label "reassesses claim"@en .
+aasp:supersedesClaim a owl:ObjectProperty ; rdfs:label "supersedes claim"@en .
+aasp:comparesClaim a owl:ObjectProperty ; rdfs:label "compares claim"@en .
+aasp:comparesAssertion a owl:ObjectProperty ; rdfs:label "compares assertion"@en .
+aasp:evaluatesClaim a owl:ObjectProperty ; rdfs:label "evaluates claim"@en .
+aasp:relatesClaim a owl:ObjectProperty ; rdfs:label "relates claim"@en .
+
+# Deprecated shortcuts retained for migration compatibility.
+aasp:hasSelectionDecision a owl:ObjectProperty ;
+    rdfs:label "has selection decision (deprecated)"@en ;
+    rdfs:comment "Deprecated 0.3.x shortcut linking an AnalyticalView directly to concrete decisions. Use declaresCriterion on the view and recordsSelectionDecision on the concrete execution."@en ;
+    owl:deprecated true .
+
+aasp:generatedFromView a owl:ObjectProperty ;
+    rdfs:label "generated from view (deprecated)"@en ;
+    rdfs:comment "Use prov:wasGeneratedBy to link an assertion to an AnalysisExecution and prov:qualifiedAssociation/prov:hadPlan to connect the execution to the AnalyticalView."@en ;
+    owl:deprecated true .
+
+aasp:generatesAssertion a owl:ObjectProperty ;
+    rdfs:label "generates assertion (deprecated)"@en ;
+    rdfs:comment "Use a concrete AnalysisExecution with prov:generated."@en ;
+    owl:deprecated true .
+
+aasp:alternativeCharacterisationOf a owl:ObjectProperty ;
+    rdfs:label "alternative characterisation of (deprecated)"@en ;
+    rdfs:comment "Use an addressable ClaimRelation with relationType AlternativeCharacterisation and an explicit relationBasis."@en ;
+    owl:deprecated true .
+
+aasp:SpatialCorrection a skos:Concept ;
+    skos:prefLabel "spatial correction (deprecated)"@en ;
+    skos:exactMatch aasp:SpatialReassessment ;
+    owl:deprecated true .
