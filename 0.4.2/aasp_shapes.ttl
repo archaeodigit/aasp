@@ -1,1 +1,85 @@
-# Replace with the versioned AASP 0.4.2 SHACL shapes TTL.
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+aasp:AnalyticalViewShape a sh:NodeShape ;
+    sh:targetClass aasp:AnalyticalView ;
+    sh:property [ sh:path aasp:hasPurpose ; sh:minCount 1 ] ;
+    sh:property [ sh:path aasp:declaresCriterion ; sh:minCount 1 ; sh:class aasp:SelectionCriterion ] .
+
+aasp:AnalysisExecutionShape a sh:NodeShape ;
+    sh:targetClass aasp:AnalysisExecution ;
+    sh:property [ sh:path prov:qualifiedAssociation ; sh:minCount 1 ; sh:node aasp:ExecutionAssociationShape ] ;
+    sh:property [ sh:path prov:used ; sh:minCount 1 ] ;
+    sh:property [ sh:path aasp:recordsSelectionDecision ; sh:minCount 1 ; sh:class aasp:SelectionDecision ] ;
+    sh:property [ sh:path prov:generated ; sh:minCount 1 ; sh:class aasp:SynthesisAssertion ] .
+
+aasp:ExecutionAssociationShape a sh:NodeShape ;
+    sh:property [ sh:path prov:hadPlan ; sh:minCount 1 ; sh:maxCount 1 ; sh:class aasp:AnalyticalView ] .
+
+aasp:SelectionDecisionShape a sh:NodeShape ;
+    sh:targetClass aasp:SelectionDecision ;
+    sh:property [ sh:path aasp:selectionTarget ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path aasp:selectionStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( aasp:included aasp:excluded ) ] ;
+    sh:property [ sh:path aasp:basedOnCriterion ; sh:minCount 1 ; sh:maxCount 1 ; sh:class aasp:SelectionCriterion ] ;
+    sh:property [ sh:path aasp:selectionReason ; sh:minCount 1 ] .
+
+aasp:ClaimRelationShape a sh:NodeShape ;
+    sh:targetClass aasp:ClaimRelation ;
+    sh:property [ sh:path aasp:fromClaim ; sh:minCount 1 ; sh:maxCount 1 ; sh:class aasp:Claim ] ;
+    sh:property [ sh:path aasp:toClaim ; sh:minCount 1 ; sh:maxCount 1 ; sh:class aasp:Claim ] ;
+    sh:property [ sh:path aasp:relationType ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( aasp:Confirmation aasp:Qualification aasp:Questioning aasp:Supersession aasp:AlternativeCharacterisation aasp:Restatement ) ] ;
+    sh:property [ sh:path aasp:relationBasis ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( aasp:IndependentObservation aasp:IndependentReassessment aasp:CitationInheritance aasp:TerminologicalRemapping aasp:SpatialReassessment aasp:SourceSpecificInterpretation aasp:EvidentialExpansion aasp:AnalyticalReconfiguration aasp:ProceduralReconfiguration ) ] ;
+    sh:property [ sh:path aasp:relationReason ; sh:minCount 1 ] .
+
+aasp:SynthesisAssertionShape a sh:NodeShape ;
+    sh:targetClass aasp:SynthesisAssertion ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class aasp:AnalysisExecution ] ;
+    sh:property [ sh:path aasp:supportedBy ; sh:minCount 1 ; sh:class aasp:EvidenceSet ] ;
+    sh:property [ sh:path aasp:aboutResource ; sh:minCount 1 ] .
+
+aasp:DatasetReleaseShape a sh:NodeShape ;
+    sh:targetClass aasp:DatasetRelease ;
+    sh:property [ sh:path aasp:revisionType ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( aasp:TechnicalRepublication aasp:ScholarlyRevision ) ] ;
+    sh:property [ sh:path aasp:serializesDataset ; sh:minCount 1 ; sh:class dcat:Dataset ] ;
+    sh:sparql [
+        sh:message "A technical republication must identify at least one unchanged republished claim."@en ;
+        sh:select """
+            PREFIX aasp: <https://w3id.org/aasp/>
+            SELECT $this WHERE {
+              $this aasp:revisionType aasp:TechnicalRepublication .
+              FILTER NOT EXISTS { $this aasp:republishesUnchangedClaim ?claim . }
+            }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "A scholarly revision must identify at least one published revised claim."@en ;
+        sh:select """
+            PREFIX aasp: <https://w3id.org/aasp/>
+            SELECT $this WHERE {
+              $this aasp:revisionType aasp:ScholarlyRevision .
+              FILTER NOT EXISTS { $this aasp:publishesClaim ?claim . }
+            }
+        """
+    ] .
+
+aasp:NoDeprecatedShortcutsShape a sh:NodeShape ;
+    sh:targetSubjectsOf aasp:hasSelectionDecision, aasp:generatedFromView, aasp:generatesAssertion, aasp:alternativeCharacterisationOf ;
+    sh:severity sh:Violation ;
+    sh:message "Examples in AASP 0.4.2 must not use deprecated shortcuts."@en ;
+    sh:closed false ;
+    sh:sparql [
+        sh:message "Deprecated AASP shortcut detected."@en ;
+        sh:select """
+            PREFIX aasp: <https://w3id.org/aasp/>
+            SELECT $this WHERE {
+              { $this aasp:hasSelectionDecision ?x }
+              UNION { $this aasp:generatedFromView ?x }
+              UNION { $this aasp:generatesAssertion ?x }
+              UNION { $this aasp:alternativeCharacterisationOf ?x }
+            }
+        """
+    ] .
