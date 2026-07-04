@@ -1,0 +1,10 @@
+PREFIX aasp: <https://w3id.org/aasp/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?plan (COUNT(?execution) AS ?executionCount) WHERE {
+  ?execution a aasp:AnalysisExecution ;
+             prov:qualifiedAssociation ?association .
+  ?association prov:hadPlan ?plan .
+}
+GROUP BY ?plan
+HAVING (COUNT(?execution) > 1)
+ORDER BY DESC(?executionCount)

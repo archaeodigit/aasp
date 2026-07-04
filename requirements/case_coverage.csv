@@ -1,0 +1,7 @@
+Requirement,EKAS,PKAP,Controlled scenario,Evaluation focus
+Preserve evidence states,Direct,Direct,Direct,Stage- or procedure-specific evidence states remain addressable
+Preserve claim lineage,Partial,Partial,Direct,Claim-relation type, basis, direction, and reason
+Make selection explicit,Direct,Direct,Direct,Selection target, status, criterion, and reason
+Separate plan and execution,Direct,Direct,Direct,Reusable plans remain distinct from concrete activities and inputs
+Compare synthesis states,Direct,Direct,Direct,Generated assertions and explicit relations among results
+Distinguish publication change from scholarly revision,Not evaluated,Not evaluated,Direct,Release typing and the epistemic basis of change

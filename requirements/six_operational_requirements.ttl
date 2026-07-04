@@ -1,0 +1,9 @@
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+aasp:R1EvidenceStatePreservation a skos:Concept ; skos:prefLabel "preserve evidence states"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .
+aasp:R2ClaimLineage a skos:Concept ; skos:prefLabel "preserve claim lineage"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .
+aasp:R3ExplicitSelection a skos:Concept ; skos:prefLabel "make selection explicit"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .
+aasp:R4PlanExecutionSeparation a skos:Concept ; skos:prefLabel "separate reusable plans from concrete executions"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .
+aasp:R5SynthesisComparison a skos:Concept ; skos:prefLabel "compare synthesis states"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .
+aasp:R6PublicationRevisionDistinction a skos:Concept ; skos:prefLabel "distinguish publication change from scholarly revision"@en ; skos:inScheme aasp:RevisabilityRequirementScheme .

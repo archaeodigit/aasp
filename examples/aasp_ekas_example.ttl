@@ -1,0 +1,144 @@
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix ekas: <https://example.org/ekas-demo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ekas:graph a aasp:ModifiedDemonstrationGraph ;
+    rdfs:label "EKAS evidential-revisability demonstration"@en ;
+    aasp:isArticleCreated true ;
+    aasp:modificationNote "The graph coordinates published EKAS identifiers and documented relations through article-created evidence summaries, analytical views, executions, decisions, and synthesis assertions. It does not claim that EKAS originally used AASP."@en .
+
+<https://opencontext.org/projects/bc71c724-eb1e-47d6-9d45-b586ddafdcfe>
+    a aasp:ArchaeologicalProject ;
+    rdfs:label "Eastern Korinthia Archaeological Survey"@en ;
+    aasp:isSourceDerived true .
+
+ekas:KesimiaContext a aasp:SurveyContext ; rdfs:label "Kesimia survey context"@en ; aasp:isSourceDerived true .
+ekas:LOCA9003 a aasp:LocalizedCulturalAnomaly ; rdfs:label "LOCA 9003"@en ; aasp:isSourceDerived true .
+
+ekas:DU1529 a aasp:DiscoveryUnit ; rdfs:label "DU 1529"@en ; aasp:isSourceDerived true .
+ekas:DU1530 a aasp:DiscoveryUnit ; rdfs:label "DU 1530"@en ; aasp:isSourceDerived true .
+ekas:DU1531 a aasp:DiscoveryUnit ; rdfs:label "DU 1531"@en ; aasp:isSourceDerived true .
+ekas:DU1542 a aasp:DiscoveryUnit ; rdfs:label "DU 1542"@en ; aasp:isSourceDerived true .
+ekas:DU1543 a aasp:DiscoveryUnit ; rdfs:label "DU 1543"@en ; aasp:isSourceDerived true .
+ekas:DU1544 a aasp:DiscoveryUnit ; rdfs:label "DU 1544"@en ; aasp:isSourceDerived true .
+
+ekas:historicalAssociation a aasp:DocumentedAssociation ;
+    rdfs:label "Published association between LOCA 9003 and six Discovery Units"@en ;
+    aasp:associatesResource ekas:LOCA9003, ekas:DU1529, ekas:DU1530, ekas:DU1531, ekas:DU1542, ekas:DU1543, ekas:DU1544 ;
+    dcterms:source "Gregory, Pullen, and Tartaron 2001" ;
+    aasp:isSourceDerived true .
+
+ekas:InitialSurveyDocumentation a aasp:ObservationActivity ;
+    rdfs:label "Aggregate representation of initial DU survey and documentation"@en ;
+    aasp:investigatedResource ekas:DU1529, ekas:DU1530, ekas:DU1531, ekas:DU1542, ekas:DU1543, ekas:DU1544 ;
+    prov:generated ekas:InitialDUEvidence ;
+    aasp:isArticleCreated true .
+
+ekas:InitialDUEvidence a aasp:EvidenceSet ;
+    rdfs:label "Initial Discovery-Unit evidence state"@en ;
+    prov:wasGeneratedBy ekas:InitialSurveyDocumentation ;
+    aasp:hasRepresentativeMember ekas:DU1529, ekas:DU1530, ekas:DU1531, ekas:DU1542, ekas:DU1543, ekas:DU1544 ;
+    aasp:isArticleCreated true .
+
+ekas:IntensifiedGridInvestigation a aasp:ObservationActivity, aasp:CollectionActivity ;
+    rdfs:label "Aggregate representation of intensified gridded investigation in LOCA 9003"@en ;
+    aasp:investigatedResource ekas:LOCA9003 ;
+    prov:generated ekas:IntensifiedGridEvidence ;
+    aasp:isArticleCreated true .
+
+ekas:IntensifiedGridEvidence a aasp:EvidenceSet ;
+    rdfs:label "Intensified gridded evidence state"@en ;
+    prov:wasGeneratedBy ekas:IntensifiedGridInvestigation ;
+    aasp:isArticleCreated true .
+
+ekas:HistoricalLOCAClaim a aasp:PublishedClaim ;
+    rdfs:label "Historical published characterisation of LOCA 9003"@en ;
+    aasp:aboutResource ekas:LOCA9003 ;
+    aasp:supportedBy ekas:InitialDUEvidence ;
+    dcterms:source "Gregory, Pullen, and Tartaron 2001" ;
+    aasp:isSourceDerived true .
+
+# Reusable criteria and views.
+ekas:InitialEvidenceCriterion a aasp:SelectionCriterion ;
+    rdfs:label "Use only evidence available before intensified gridded investigation"@en .
+ekas:ExpandedEvidenceCriterion a aasp:SelectionCriterion ;
+    rdfs:label "Use initial DU evidence, intensified grid evidence, and the historical published claim"@en .
+
+ekas:InitialView a aasp:AnalyticalView ;
+    rdfs:label "Initial evidence view"@en ;
+    aasp:hasPurpose "Generate a synthesis from the initial Discovery-Unit evidence state while keeping later intensified evidence outside this execution."@en ;
+    aasp:declaresCriterion ekas:InitialEvidenceCriterion ;
+    aasp:testsRequirement aasp:R1EvidenceStatePreservation, aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation .
+
+ekas:IntensifiedView a aasp:AnalyticalView ;
+    rdfs:label "Expanded evidential view"@en ;
+    aasp:hasPurpose "Generate a more specific synthesis using the expanded evidential basis without overwriting the initial state."@en ;
+    aasp:declaresCriterion ekas:ExpandedEvidenceCriterion ;
+    aasp:testsRequirement aasp:R1EvidenceStatePreservation, aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation .
+
+ekas:InitialAssociation a prov:Association ; prov:hadPlan ekas:InitialView .
+ekas:IntensifiedAssociation a prov:Association ; prov:hadPlan ekas:IntensifiedView .
+
+ekas:IncludeInitialEvidence a aasp:SelectionDecision ;
+    aasp:selectionTarget ekas:InitialDUEvidence ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ekas:InitialEvidenceCriterion ;
+    aasp:selectionReason "The execution represents the initial documented evidence state."@en .
+
+ekas:ExcludeIntensifiedEvidence a aasp:SelectionDecision ;
+    aasp:selectionTarget ekas:IntensifiedGridEvidence ; aasp:selectionStatus aasp:excluded ;
+    aasp:basedOnCriterion ekas:InitialEvidenceCriterion ;
+    aasp:selectionReason "This evidence was produced by a later intensified investigation and is excluded from the initial-state execution."@en .
+
+ekas:IncludeInitialEvidenceExpanded a aasp:SelectionDecision ;
+    aasp:selectionTarget ekas:InitialDUEvidence ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ekas:ExpandedEvidenceCriterion ;
+    aasp:selectionReason "The earlier evidence state remains part of the expanded evidential basis."@en .
+
+ekas:IncludeIntensifiedEvidence a aasp:SelectionDecision ;
+    aasp:selectionTarget ekas:IntensifiedGridEvidence ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ekas:ExpandedEvidenceCriterion ;
+    aasp:selectionReason "The intensified grid evidence is included to support a more specific synthesis."@en .
+
+ekas:IncludeHistoricalClaim a aasp:SelectionDecision ;
+    aasp:selectionTarget ekas:HistoricalLOCAClaim ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ekas:ExpandedEvidenceCriterion ;
+    aasp:selectionReason "The historical claim is retained as a source-qualified interpretive input rather than silently converted into observation."@en .
+
+ekas:InitialExecution a aasp:AnalysisExecution ;
+    rdfs:label "Initial EKAS synthesis execution"@en ;
+    prov:qualifiedAssociation ekas:InitialAssociation ;
+    prov:used ekas:InitialDUEvidence ;
+    aasp:recordsSelectionDecision ekas:IncludeInitialEvidence, ekas:ExcludeIntensifiedEvidence ;
+    prov:generated ekas:InitialConcentrationAssertion ;
+    aasp:testsRequirement aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation .
+
+ekas:IntensifiedExecution a aasp:AnalysisExecution ;
+    rdfs:label "Expanded EKAS synthesis execution"@en ;
+    prov:qualifiedAssociation ekas:IntensifiedAssociation ;
+    prov:used ekas:InitialDUEvidence, ekas:IntensifiedGridEvidence, ekas:HistoricalLOCAClaim ;
+    aasp:recordsSelectionDecision ekas:IncludeInitialEvidenceExpanded, ekas:IncludeIntensifiedEvidence, ekas:IncludeHistoricalClaim ;
+    prov:generated ekas:SpecificLOCAAssertion ;
+    aasp:testsRequirement aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation .
+
+ekas:InitialConcentrationAssertion a aasp:SynthesisAssertion ;
+    rdfs:label "Initial synthesis: a concentration is associated with the six Discovery Units"@en ;
+    aasp:aboutResource ekas:LOCA9003 ;
+    aasp:supportedBy ekas:InitialDUEvidence ;
+    prov:wasGeneratedBy ekas:InitialExecution .
+
+ekas:SpecificLOCAAssertion a aasp:SynthesisAssertion ;
+    rdfs:label "Expanded synthesis: the intensified evidence supports a more specific characterisation of LOCA 9003"@en ;
+    aasp:aboutResource ekas:LOCA9003 ;
+    aasp:supportedBy ekas:InitialDUEvidence, ekas:IntensifiedGridEvidence ;
+    prov:wasGeneratedBy ekas:IntensifiedExecution .
+
+ekas:EvidentialQualificationRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ekas:SpecificLOCAAssertion ;
+    aasp:toClaim ekas:InitialConcentrationAssertion ;
+    aasp:relationType aasp:Qualification ;
+    aasp:relationBasis aasp:EvidentialExpansion ;
+    aasp:relationReason "A broader and more granular evidence state supports a more specific synthesis while the earlier synthesis remains citable."@en ;
+    aasp:testsRequirement aasp:R2ClaimLineage, aasp:R5SynthesisComparison .

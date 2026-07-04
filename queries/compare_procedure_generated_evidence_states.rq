@@ -1,0 +1,11 @@
+PREFIX aasp: <https://w3id.org/aasp/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?claimA ?claimB ?basis ?reason WHERE {
+  ?relation a aasp:ClaimRelation ;
+            aasp:fromClaim ?claimA ;
+            aasp:toClaim ?claimB ;
+            aasp:relationBasis ?basis ;
+            aasp:relationReason ?reason .
+  FILTER(?basis = aasp:ProceduralReconfiguration)
+}
+ORDER BY ?claimA

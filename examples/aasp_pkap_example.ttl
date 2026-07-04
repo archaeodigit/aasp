@@ -1,0 +1,147 @@
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix pkap: <https://example.org/pkap-demo/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmsurv: <https://takin.solutions/ontologies/CRMsurv/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+pkap:graph a aasp:ModifiedDemonstrationGraph ;
+    rdfs:label "PKAP procedural-revisability demonstration"@en ;
+    aasp:isArticleCreated true ;
+    aasp:modificationNote "The graph coordinates source-derived PKAP records and CSV distinctions through article-created procedure representations, evidence states, analytical views, executions, decisions, assertions, and claim relations. It does not claim that PKAP originally used AASP."@en .
+
+<https://opencontext.org/projects/3f6dcd13-a476-488e-ed10-47d25513fcb2>
+    a aasp:ArchaeologicalProject ;
+    rdfs:label "Pyla-Koutsopetria Archaeological Project I: Pedestrian Survey"@en ;
+    aasp:isSourceDerived true .
+
+<http://opencontext.org/subjects/c3edbdc2-6b6b-4885-bea5-16f8e75b5881>
+    a crmsurv:U4_Survey_Surface_Unit, geo:Feature ;
+    rdfs:label "PKAP Unit 501"@en ;
+    aasp:isSourceDerived true .
+
+pkap:csvSnapshot a dcat:Dataset ;
+    dcterms:title "Open Context PKAP records CSV used for the bounded demonstration"@en ;
+    dcterms:identifier "open-context-8951-records.csv" ;
+    dcterms:source <https://opencontext.org/projects/3f6dcd13-a476-488e-ed10-47d25513fcb2> ;
+    dcterms:format "text/csv" ;
+    dcterms:description "Snapshot SHA-256: 5925a4458cb392883f209aee9784f5673f8023629875e3d29ad7f99ddbe07641"@en .
+
+# Field procedures are represented with CRM/PROV, not as AASP AnalyticalViews.
+pkap:StandardPedestrianProcedure a crm:E29_Design_or_Procedure, prov:Plan ;
+    rdfs:label "PKAP standard pedestrian collection procedure — article representation"@en ;
+    dcterms:description "Procedure representation for the standard collection stream associated with Unit 501."@en ;
+    aasp:isArticleCreated true .
+
+pkap:ExperimentalCollectionProcedure a crm:E29_Design_or_Procedure, prov:Plan ;
+    rdfs:label "PKAP experimental intensive collection procedure — article representation"@en ;
+    dcterms:description "Procedure representation for batches marked Experimental Unit = true and associated with Unit 501."@en ;
+    aasp:isArticleCreated true .
+
+pkap:standardFieldAssociation501 a prov:Association ; prov:hadPlan pkap:StandardPedestrianProcedure .
+pkap:experimentalFieldAssociation501 a prov:Association ; prov:hadPlan pkap:ExperimentalCollectionProcedure .
+
+pkap:StandardCollection501 a aasp:CollectionActivity, crmsurv:U2_Survey_Collection_Activity ;
+    rdfs:label "Unit 501 standard collection stream — article representation"@en ;
+    aasp:investigatedResource <http://opencontext.org/subjects/c3edbdc2-6b6b-4885-bea5-16f8e75b5881> ;
+    prov:qualifiedAssociation pkap:standardFieldAssociation501 ;
+    prov:generated pkap:StandardEvidence501 ;
+    prov:used pkap:csvSnapshot ;
+    aasp:isArticleCreated true .
+
+pkap:ExperimentalCollection501 a aasp:CollectionActivity, crmsurv:U2_Survey_Collection_Activity ;
+    rdfs:label "Unit 501 experimental collection stream — article representation"@en ;
+    aasp:investigatedResource <http://opencontext.org/subjects/c3edbdc2-6b6b-4885-bea5-16f8e75b5881> ;
+    prov:qualifiedAssociation pkap:experimentalFieldAssociation501 ;
+    prov:generated pkap:ExperimentalEvidence501 ;
+    prov:used pkap:csvSnapshot ;
+    aasp:isArticleCreated true .
+
+pkap:StandardEvidence501 a aasp:EvidenceSet ;
+    rdfs:label "Unit 501 standard-procedure evidence state"@en ;
+    aasp:recordCount 74 ;
+    aasp:collectedQuantity 223 ;
+    pkap:aggregateWeightGrams 8099 ;
+    pkap:distinctChronotypeLabelCount 28 ;
+    pkap:distinctPeriodLabelCount 9 ;
+    prov:wasGeneratedBy pkap:StandardCollection501 ;
+    prov:wasDerivedFrom pkap:csvSnapshot ;
+    aasp:isArticleCreated true .
+
+pkap:ExperimentalEvidence501 a aasp:EvidenceSet ;
+    rdfs:label "Unit 501 experimental-procedure evidence state"@en ;
+    aasp:recordCount 197 ;
+    aasp:collectedQuantity 742 ;
+    pkap:aggregateWeightGrams 19783 ;
+    pkap:distinctChronotypeLabelCount 45 ;
+    pkap:distinctPeriodLabelCount 17 ;
+    prov:wasGeneratedBy pkap:ExperimentalCollection501 ;
+    prov:wasDerivedFrom pkap:csvSnapshot ;
+    aasp:isArticleCreated true .
+
+pkap:aggregateWeightGrams a rdf:Property ; rdfs:label "aggregate weight in grams"@en .
+pkap:distinctChronotypeLabelCount a rdf:Property ; rdfs:label "distinct chronotype-label count"@en .
+pkap:distinctPeriodLabelCount a rdf:Property ; rdfs:label "distinct period-label count"@en .
+
+pkap:ChronotypeLabelComparisonCriterion a aasp:SelectionCriterion ;
+    rdfs:label "Compare distinct published chronotype labels within one survey unit and one procedure stream"@en .
+
+pkap:Unit501ProcedureComparisonView a aasp:AnalyticalView ;
+    rdfs:label "Unit 501 procedure-sensitive chronotype comparison view"@en ;
+    aasp:hasPurpose "Compare the published evidence states generated by standard and experimental collection procedures without treating either as a complete archaeological population."@en ;
+    aasp:declaresCriterion pkap:ChronotypeLabelComparisonCriterion ;
+    aasp:testsRequirement aasp:R1EvidenceStatePreservation, aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation, aasp:R5SynthesisComparison .
+
+pkap:standardAnalysisAssociation501 a prov:Association ; prov:hadPlan pkap:Unit501ProcedureComparisonView .
+pkap:experimentalAnalysisAssociation501 a prov:Association ; prov:hadPlan pkap:Unit501ProcedureComparisonView .
+
+pkap:IncludeStandardEvidence501 a aasp:SelectionDecision ;
+    aasp:selectionTarget pkap:StandardEvidence501 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion pkap:ChronotypeLabelComparisonCriterion ;
+    aasp:selectionReason "Included as the evidence state generated by the standard collection stream for Unit 501."@en .
+
+pkap:IncludeExperimentalEvidence501 a aasp:SelectionDecision ;
+    aasp:selectionTarget pkap:ExperimentalEvidence501 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion pkap:ChronotypeLabelComparisonCriterion ;
+    aasp:selectionReason "Included as the evidence state generated by batches explicitly marked Experimental Unit = true for Unit 501."@en .
+
+pkap:StandardEvidenceAnalysis501 a aasp:AnalysisExecution ;
+    rdfs:label "Analysis execution over Unit 501 standard evidence"@en ;
+    prov:qualifiedAssociation pkap:standardAnalysisAssociation501 ;
+    prov:used pkap:StandardEvidence501 ;
+    aasp:recordsSelectionDecision pkap:IncludeStandardEvidence501 ;
+    prov:generated pkap:StandardChronotypeAssertion501 .
+
+pkap:ExperimentalEvidenceAnalysis501 a aasp:AnalysisExecution ;
+    rdfs:label "Analysis execution over Unit 501 experimental evidence"@en ;
+    prov:qualifiedAssociation pkap:experimentalAnalysisAssociation501 ;
+    prov:used pkap:ExperimentalEvidence501 ;
+    aasp:recordsSelectionDecision pkap:IncludeExperimentalEvidence501 ;
+    prov:generated pkap:ExperimentalChronotypeAssertion501 .
+
+pkap:StandardChronotypeAssertion501 a aasp:SynthesisAssertion ;
+    rdfs:label "Standard procedure records 28 distinct chronotype labels in Unit 501"@en ;
+    dcterms:description "Within the supplied CSV, the standard collection stream contains 74 batch records, a summed quantity of 223, and 28 distinct non-null chronotype labels."@en ;
+    aasp:aboutResource <http://opencontext.org/subjects/c3edbdc2-6b6b-4885-bea5-16f8e75b5881> ;
+    aasp:supportedBy pkap:StandardEvidence501 ;
+    prov:wasGeneratedBy pkap:StandardEvidenceAnalysis501 .
+
+pkap:ExperimentalChronotypeAssertion501 a aasp:SynthesisAssertion ;
+    rdfs:label "Experimental procedure records 45 distinct chronotype labels in Unit 501"@en ;
+    dcterms:description "Within the supplied CSV, the experimental collection stream contains 197 batch records, a summed quantity of 742, and 45 distinct non-null chronotype labels."@en ;
+    aasp:aboutResource <http://opencontext.org/subjects/c3edbdc2-6b6b-4885-bea5-16f8e75b5881> ;
+    aasp:supportedBy pkap:ExperimentalEvidence501 ;
+    prov:wasGeneratedBy pkap:ExperimentalEvidenceAnalysis501 .
+
+pkap:Unit501ProceduralRelation a aasp:ClaimRelation ;
+    aasp:fromClaim pkap:ExperimentalChronotypeAssertion501 ;
+    aasp:toClaim pkap:StandardChronotypeAssertion501 ;
+    aasp:relationType aasp:AlternativeCharacterisation ;
+    aasp:relationBasis aasp:ProceduralReconfiguration ;
+    aasp:relationReason "The two assertions describe the same survey unit through evidence states generated by different collection procedures; the difference is procedural rather than a silent correction of a source record."@en ;
+    aasp:testsRequirement aasp:R2ClaimLineage, aasp:R5SynthesisComparison .

@@ -1,0 +1,10 @@
+PREFIX aasp: <https://w3id.org/aasp/>
+SELECT ?relation ?fromClaim ?toClaim ?type ?basis ?reason WHERE {
+  ?relation a aasp:ClaimRelation ;
+            aasp:fromClaim ?fromClaim ;
+            aasp:toClaim ?toClaim ;
+            aasp:relationType ?type ;
+            aasp:relationBasis ?basis ;
+            aasp:relationReason ?reason .
+}
+ORDER BY ?relation

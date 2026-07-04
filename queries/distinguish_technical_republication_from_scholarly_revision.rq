@@ -1,0 +1,8 @@
+PREFIX aasp: <https://w3id.org/aasp/>
+SELECT ?release ?revisionType ?publishedClaim ?unchangedClaim WHERE {
+  ?release a aasp:DatasetRelease ;
+           aasp:revisionType ?revisionType .
+  OPTIONAL { ?release aasp:publishesClaim ?publishedClaim . }
+  OPTIONAL { ?release aasp:republishesUnchangedClaim ?unchangedClaim . }
+}
+ORDER BY ?release

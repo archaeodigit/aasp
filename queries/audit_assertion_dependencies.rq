@@ -1,0 +1,13 @@
+PREFIX aasp: <https://w3id.org/aasp/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?assertion ?execution ?selection ?evidence ?activity ?plan WHERE {
+  ?assertion a aasp:SynthesisAssertion ;
+             prov:wasGeneratedBy ?execution ;
+             aasp:supportedBy ?evidence .
+  ?execution a aasp:AnalysisExecution ;
+             aasp:recordsSelectionDecision ?selection ;
+             prov:qualifiedAssociation ?association .
+  ?association prov:hadPlan ?plan .
+  OPTIONAL { ?evidence prov:wasGeneratedBy ?activity . }
+}
+ORDER BY ?assertion

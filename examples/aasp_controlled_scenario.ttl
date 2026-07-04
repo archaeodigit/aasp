@@ -1,0 +1,217 @@
+@prefix aasp: <https://w3id.org/aasp/> .
+@prefix ctrl: <https://example.org/controlled-scenario/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ctrl:scenario a aasp:ControlledScenario ;
+    rdfs:label "Controlled longitudinal revisability scenario"@en ;
+    aasp:isSyntheticScenario true ;
+    dcterms:description "A boundary test for claim lineage, repeated execution of a reusable plan, spatial reassessment, and the distinction between technical republication and scholarly revision. It is not empirical validation."@en .
+
+ctrl:FictionalLocality a aasp:Locality ; rdfs:label "Fictional locality K"@en ; aasp:isSyntheticScenario true .
+
+ctrl:Survey2010 a aasp:ObservationActivity, aasp:CollectionActivity ;
+    rdfs:label "2010 fictional survey"@en ;
+    aasp:investigatedResource ctrl:FictionalLocality ;
+    prov:generated ctrl:CeramicEvidence2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:CeramicEvidence2010 a aasp:EvidenceSet ;
+    rdfs:label "2010 ceramic evidence state"@en ;
+    prov:wasGeneratedBy ctrl:Survey2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:Claim2010 a aasp:PublishedClaim, aasp:ChronologyClaim ;
+    rdfs:label "2010 claim: Late Roman occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:CeramicEvidence2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:Revisit2012 a aasp:ObservationActivity ;
+    rdfs:label "2012 fictional revisit"@en ;
+    aasp:investigatedResource ctrl:FictionalLocality ;
+    prov:generated ctrl:RevisitEvidence2012 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:RevisitEvidence2012 a aasp:EvidenceSet ;
+    rdfs:label "2012 independent revisit evidence"@en ;
+    prov:wasGeneratedBy ctrl:Revisit2012 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:ConfirmingClaim2012 a aasp:PublishedClaim, aasp:ChronologyClaim ;
+    rdfs:label "2012 claim independently supports Late Roman occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:RevisitEvidence2012 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:ConfirmationRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:ConfirmingClaim2012 ; aasp:toClaim ctrl:Claim2010 ;
+    aasp:relationType aasp:Confirmation ; aasp:relationBasis aasp:IndependentObservation ;
+    aasp:relationReason "The 2012 revisit produces independent observations consistent with the 2010 chronology."@en .
+
+ctrl:InheritedClaim2015 a aasp:PublishedClaim, aasp:ChronologyClaim ;
+    rdfs:label "2015 catalogue claim repeats Late Roman occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:CeramicEvidence2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:CitationInheritanceRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:InheritedClaim2015 ; aasp:toClaim ctrl:Claim2010 ;
+    aasp:relationType aasp:Restatement ; aasp:relationBasis aasp:CitationInheritance ;
+    aasp:relationReason "The catalogue repeats the interpretation without introducing new archaeological evidence."@en .
+
+ctrl:QuestioningClaim2018 a aasp:PublishedClaim, aasp:ChronologyClaim ;
+    rdfs:label "2018 review questions the precision of the broad Late Roman label"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:CeramicEvidence2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:QuestioningRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:QuestioningClaim2018 ; aasp:toClaim ctrl:Claim2010 ;
+    aasp:relationType aasp:Questioning ; aasp:relationBasis aasp:IndependentReassessment ;
+    aasp:relationReason "The 2018 review identifies that the published chronology is broader than the diagnostic evidence warrants."@en .
+
+ctrl:Reassessment2020 a aasp:ReassessmentActivity ;
+    rdfs:label "2020 fictional ceramic reassessment"@en ;
+    prov:used ctrl:CeramicEvidence2010 ;
+    prov:generated ctrl:DiagnosticEvidence2020 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:DiagnosticEvidence2020 a aasp:EvidenceSet ;
+    rdfs:label "2020 diagnostic evidence state"@en ;
+    prov:wasGeneratedBy ctrl:Reassessment2020 ;
+    prov:wasDerivedFrom ctrl:CeramicEvidence2010 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:ReassessedClaim2020 a aasp:PublishedClaim, aasp:ChronologyClaim ;
+    rdfs:label "2020 reassessed claim: later fifth to sixth century occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:DiagnosticEvidence2020 ;
+    aasp:isSyntheticScenario true .
+
+ctrl:QualificationRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:ReassessedClaim2020 ; aasp:toClaim ctrl:Claim2010 ;
+    aasp:relationType aasp:Qualification ; aasp:relationBasis aasp:IndependentReassessment ;
+    aasp:relationReason "Reassessment of diagnostic evidence narrows the earlier chronology without deleting the earlier published claim."@en .
+
+ctrl:LegacyPointGeometry a geo:Geometry ; rdfs:label "Legacy point geometry"@en .
+ctrl:CorrectedPolygonGeometry a geo:Geometry ; rdfs:label "Corrected polygon geometry"@en .
+
+ctrl:PointClaim2010 a aasp:SpatialAssertion ;
+    rdfs:label "2010 spatial assertion based on a legacy point"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:assertsGeometry ctrl:LegacyPointGeometry ;
+    aasp:supportedBy ctrl:CeramicEvidence2010 .
+
+ctrl:GNSS2020 a aasp:ObservationActivity ;
+    rdfs:label "2020 fictional GNSS reassessment"@en ;
+    aasp:investigatedResource ctrl:FictionalLocality ;
+    prov:generated ctrl:CorrectedPolygonGeometry .
+
+ctrl:PolygonClaim2020 a aasp:SpatialAssertion ;
+    rdfs:label "2020 spatial assertion based on a corrected polygon"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:assertsGeometry ctrl:CorrectedPolygonGeometry ;
+    aasp:supportedBy ctrl:DiagnosticEvidence2020 .
+
+ctrl:SpatialSupersessionRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:PolygonClaim2020 ; aasp:toClaim ctrl:PointClaim2010 ;
+    aasp:relationType aasp:Supersession ; aasp:relationBasis aasp:SpatialReassessment ;
+    aasp:relationReason "The corrected polygon supersedes the legacy point for spatial analysis but does not by itself revise chronology."@en .
+
+# One reusable plan, two concrete executions.
+ctrl:ChronologyCriterion a aasp:SelectionCriterion ;
+    rdfs:label "Use source-qualified diagnostic ceramic evidence available in the selected release"@en .
+
+ctrl:ReusableChronologyView a aasp:AnalyticalView ;
+    rdfs:label "Reusable chronology synthesis view"@en ;
+    aasp:hasPurpose "Generate a chronology synthesis from the evidence and claims available in a declared dataset state."@en ;
+    aasp:declaresCriterion ctrl:ChronologyCriterion ;
+    aasp:testsRequirement aasp:R3ExplicitSelection, aasp:R4PlanExecutionSeparation .
+
+ctrl:InitialAnalysisAssociation a prov:Association ; prov:hadPlan ctrl:ReusableChronologyView .
+ctrl:RevisedAnalysisAssociation a prov:Association ; prov:hadPlan ctrl:ReusableChronologyView .
+
+ctrl:IncludeEvidence2010 a aasp:SelectionDecision ;
+    aasp:selectionTarget ctrl:CeramicEvidence2010 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ctrl:ChronologyCriterion ;
+    aasp:selectionReason "This is the evidence state available to the initial synthesis execution."@en .
+
+ctrl:IncludeClaim2010 a aasp:SelectionDecision ;
+    aasp:selectionTarget ctrl:Claim2010 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ctrl:ChronologyCriterion ;
+    aasp:selectionReason "The source-qualified 2010 chronology is the published claim available to the initial execution."@en .
+
+ctrl:IncludeEvidence2010Revised a aasp:SelectionDecision ;
+    aasp:selectionTarget ctrl:CeramicEvidence2010 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ctrl:ChronologyCriterion ;
+    aasp:selectionReason "The earlier evidence remains part of the revised knowledge state."@en .
+
+ctrl:IncludeDiagnostic2020 a aasp:SelectionDecision ;
+    aasp:selectionTarget ctrl:DiagnosticEvidence2020 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ctrl:ChronologyCriterion ;
+    aasp:selectionReason "The new diagnostic evidence is available in the revised release."@en .
+
+ctrl:IncludeReassessedClaim2020 a aasp:SelectionDecision ;
+    aasp:selectionTarget ctrl:ReassessedClaim2020 ; aasp:selectionStatus aasp:included ;
+    aasp:basedOnCriterion ctrl:ChronologyCriterion ;
+    aasp:selectionReason "The reassessed source-qualified chronology is included in the revised execution."@en .
+
+ctrl:InitialSynthesisExecution a aasp:AnalysisExecution ;
+    rdfs:label "Initial chronology synthesis execution"@en ;
+    prov:qualifiedAssociation ctrl:InitialAnalysisAssociation ;
+    prov:used ctrl:CeramicEvidence2010, ctrl:Claim2010 ;
+    aasp:recordsSelectionDecision ctrl:IncludeEvidence2010, ctrl:IncludeClaim2010 ;
+    prov:generated ctrl:InitialSynthesisState .
+
+ctrl:RevisedSynthesisExecution a aasp:AnalysisExecution ;
+    rdfs:label "Revised chronology synthesis execution"@en ;
+    prov:qualifiedAssociation ctrl:RevisedAnalysisAssociation ;
+    prov:used ctrl:CeramicEvidence2010, ctrl:DiagnosticEvidence2020, ctrl:ReassessedClaim2020 ;
+    aasp:recordsSelectionDecision ctrl:IncludeEvidence2010Revised, ctrl:IncludeDiagnostic2020, ctrl:IncludeReassessedClaim2020 ;
+    prov:generated ctrl:RevisedSynthesisState .
+
+ctrl:InitialSynthesisState a aasp:SynthesisAssertion ;
+    rdfs:label "Initial synthesis state: Late Roman occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:CeramicEvidence2010 ;
+    prov:wasGeneratedBy ctrl:InitialSynthesisExecution .
+
+ctrl:RevisedSynthesisState a aasp:SynthesisAssertion ;
+    rdfs:label "Revised synthesis state: later fifth to sixth century occupation"@en ;
+    aasp:aboutResource ctrl:FictionalLocality ;
+    aasp:supportedBy ctrl:CeramicEvidence2010, ctrl:DiagnosticEvidence2020 ;
+    prov:wasGeneratedBy ctrl:RevisedSynthesisExecution .
+
+ctrl:SynthesisQualificationRelation a aasp:ClaimRelation ;
+    aasp:fromClaim ctrl:RevisedSynthesisState ; aasp:toClaim ctrl:InitialSynthesisState ;
+    aasp:relationType aasp:Qualification ; aasp:relationBasis aasp:EvidentialExpansion ;
+    aasp:relationReason "The same reusable plan is executed over a later knowledge state containing new diagnostic evidence and a reassessed claim."@en ;
+    aasp:testsRequirement aasp:R2ClaimLineage, aasp:R5SynthesisComparison .
+
+ctrl:DatasetSnapshot11 a dcat:Dataset ; rdfs:label "Fictional dataset snapshot 1.1"@en .
+ctrl:DatasetSnapshot20 a dcat:Dataset ; rdfs:label "Fictional dataset snapshot 2.0"@en .
+
+ctrl:Release11 a aasp:DatasetRelease ;
+    rdfs:label "Fictional release 1.1"@en ;
+    dcterms:hasVersion "1.1" ;
+    aasp:revisionType aasp:TechnicalRepublication ;
+    aasp:republishesUnchangedClaim ctrl:Claim2010 ;
+    aasp:serializesDataset ctrl:DatasetSnapshot11 ;
+    prov:wasRevisionOf ctrl:DatasetSnapshot10 ;
+    aasp:testsRequirement aasp:R6PublicationAndRevision .
+
+ctrl:DatasetSnapshot10 a dcat:Dataset ; rdfs:label "Fictional dataset snapshot 1.0"@en .
+
+ctrl:Release20 a aasp:DatasetRelease ;
+    rdfs:label "Fictional release 2.0"@en ;
+    dcterms:hasVersion "2.0" ;
+    aasp:revisionType aasp:ScholarlyRevision ;
+    aasp:publishesClaim ctrl:ReassessedClaim2020 ;
+    aasp:serializesDataset ctrl:DatasetSnapshot20 ;
+    prov:wasRevisionOf ctrl:Release11 ;
+    aasp:testsRequirement aasp:R6PublicationAndRevision .
